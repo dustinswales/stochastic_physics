@@ -16,6 +16,11 @@ else()
   endif()
 endif()
 
+if(NO_QUAD_PRECISION)
+  message(STATUS "Compile stochastic physics w/o quadruple precision when using Nvidia.")
+  add_definitions(-DNO_QUAD_PRECISION)
+endif()
+
 list(APPEND _stoch_phys_srcs
   kinddef.F90
   mpi_wrapper.F90

@@ -60,7 +60,8 @@ module stochy_patterngenerator_mod
    integer(8), intent(inout) :: iseed(npatterns)
    integer m,j,l,n,nm,nn,np,indev1,indev2,indod1,indod2
    integer(8) count, count_rate, count_max, count_trunc
-   integer(8) :: iscale = 10000000000
+   integer(8) :: iscale = 1000000000
+   integer(8) :: imod   = 2147483648
    integer count4, ierr
 !   integer  member_id
    integer indlsod,indlsev,jbasev,jbasod
@@ -151,7 +152,7 @@ module stochy_patterngenerator_mod
            call system_clock(count, count_rate, count_max)
            ! iseed is elapsed time since unix epoch began (secs)
            ! truncate to 4 byte integer
-           count_trunc = iscale*(count/iscale)
+           count_trunc = iscale*10*(count/(iscale*10)) !DJS2024: I think we can remove these 10*, since iscale is limited by type to 1e8
            count4 = count - count_trunc !+ member_id
            print *,'using seed',count4
          else
@@ -159,7 +160,7 @@ module stochy_patterngenerator_mod
            ! don't rely on compiler to truncate integer(8) to integer(4) on
            ! overflow, do wrap around explicitly.
            !count4 = mod(iseed(np) + member_id + 2147483648, 4294967296) - 2147483648
-           count4 = mod(iseed(np) + 2147483648, 4294967296) - 2147483648
+           count4 = mod(iseed(np) + imod, imod*2) - imod
            print *,'using seed',count4,iseed(np)!,member_id
          endif
       endif

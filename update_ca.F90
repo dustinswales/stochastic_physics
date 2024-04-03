@@ -310,7 +310,8 @@ integer, dimension(nxc,nyc) :: neighbours,birth,thresh,adlives,adgrid
 integer, dimension(nxc,nyc) :: newcell, temp,newseed
 integer, dimension(ncells,ncells) :: onegrid
 integer(8)           :: nx_full,ny_full
-integer(8)           :: iscale = 10000000000
+integer(8)           :: iscale = 1000000000
+integer(8)           :: imod   = 2147483648
 logical, save        :: start_from_restart
 real, dimension(nxch,nych) :: adlives_halo,adgrid_halo
 real, dimension(nxc,nyc) :: noise_b,umax,vmax,umin,vmin,dyhigh
@@ -392,10 +393,10 @@ if(mod(kstep,nseed)==0. .and. (kstep >= initialize_ca .or. start_from_restart))t
          i1=i+(isc-1)*ncells
          if (iseed_ca <= 0) then
             !call system_clock(count, count_rate, count_max)
-            count_trunc = iscale*(count/iscale)
+            count_trunc = iscale*10*(count/(iscale*10)) !DJS2024: I think we can remove these 10*, since iscale is limited by type to 1e8
             count4 = count - count_trunc + mytile *( i1+nx_full*(j1-1)) ! no need to multply by 7 since time will be different in sgs
          else
-            count4 = mod((iseed_ca*nf+mytile)*(i1+nx_full*(j1-1))+ 2147483648, 4294967296) - 2147483648
+            count4 = mod((iseed_ca*nf+mytile)*(i1+nx_full*(j1-1))+ imod, imod*2) - imod
          endif
          noise_b(i,j)=real(random_01_CB(kstep,count4),kind=8)
       enddo
@@ -668,7 +669,8 @@ real, dimension(nxc,nyc) :: noise_b
 integer(8) :: count, count_rate, count_max, count_trunc
 integer    :: count4
 integer(8) :: nx_full,ny_full
-integer(8) :: iscale = 10000000000
+integer(8) :: iscale = 100000000
+integer(8) :: imod   = 2147483648
 integer*8            :: i1,j1
 
 !-------------------------------------------------------------------------------------------------
@@ -703,10 +705,10 @@ if(mod(kstep,nseed) == 0)then
          i1=i+(isc-1)*ncells
          if (iseed_ca <= 0) then
             !call system_clock(count, count_rate, count_max)
-            count_trunc = iscale*(count/iscale)
+            count_trunc = iscale*100*(count/(iscale*100))
             count4 = count - count_trunc + mytile *( i1+nx_full*(j1-1)) ! no need to multply by 7 since time will be different in sgs
          else
-            count4 = mod(iseed_ca*nf+(7*mytile)*(i1+nx_full*(j1-1))+ 2147483648, 4294967296) - 2147483648
+            count4 = mod(iseed_ca*nf+(7*mytile)*(i1+nx_full*(j1-1))+ imod, imod*2) - imod
          endif
          noise_b(i,j)=real(random_01_CB(kstep,count4),kind=8)
       enddo

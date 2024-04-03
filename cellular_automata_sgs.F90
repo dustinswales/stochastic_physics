@@ -66,7 +66,8 @@ integer :: seed, ierr7,blk, ix, iix, count4,ih,jh
 integer :: blocksz,levs,u200,u850
 integer, save :: initialize_ca
 integer(8) :: count, count_rate, count_max, count_trunc,nx_full
-integer(8) :: iscale = 10000000000
+integer(8) :: iscale = 1000000000
+integer(8) :: imod   = 2147483648
 integer, allocatable :: iini(:,:,:),ilives_in(:,:,:),ca_plumes(:,:),io_layout(:)
 real(kind=kind_phys), allocatable :: ssti(:,:),lsmski(:,:),lakei(:,:),uwindi(:,:),vwindi(:,:),dxi(:,:),heighti(:,:,:)
 real(kind=kind_phys), allocatable :: CA(:,:),condition(:,:),uhigh(:,:),vhigh(:,:),dxhigh(:,:),conditiongrid(:,:)
@@ -291,12 +292,12 @@ if (cold_start_ca_sgs) then
                call system_clock(count, count_rate, count_max)
                ! iseed is elapsed time since unix epoch began (secs)
                ! truncate to 4 byte integer
-               count_trunc = iscale*(count/iscale)
+               count_trunc = iscale*10*(count/(10*iscale)) !DJS2024: I think we can remove these 10*, since iscale is limited by type to 1e8
                count4 = count - count_trunc + mytile *( i1+nx_full*(j1-1)) ! no need to multply by 7 since time will be different in sgs
             else
                ! don't rely on compiler to truncate integer(8) to integer(4) on
                ! overflow, do wrap around explicitly.
-               count4 = mod((iseed_ca+mytile)*(i1+nx_full*(j1-1))+ 2147483648, 4294967296) - 2147483648
+               count4 = mod((iseed_ca+mytile)*(i1+nx_full*(j1-1))+ imod, imod*2) - imod
             endif
             ct=1
             do nf=1,nca

@@ -50,7 +50,8 @@ integer,save :: isdnx,iednx,jsdnx,jednx
 integer,save :: iscnx,iecnx,jscnx,jecnx
 integer :: nxncells, nyncells
 integer(8) :: count, count_rate, count_max, count_trunc,nx_full
-integer(8) :: iscale = 10000000000
+integer(8) :: iscale = 1000000000
+integer(8) :: imod   = 2147483648
 integer, allocatable :: iini_g(:,:,:),ilives_g(:,:)
 integer, allocatable :: io_layout(:)
 real(kind=kind_phys), allocatable :: field_out(:,:,:), field_smooth(:,:)
@@ -162,12 +163,12 @@ k_in=1
           call system_clock(count, count_rate, count_max)
           ! iseed is elapsed time since unix epoch began (secs)
           ! truncate to 4 byte integer
-          count_trunc = iscale*(count/iscale)
+          count_trunc = iscale*10*(count/(10*iscale)) !DJS2024: I think we can remove these 10*, since iscale is limited by type to 1e8
           count4 = count - count_trunc + mytile *( i1+nx_full*(j1-1)) ! no need to multply by 7 since time will be different in sgs
        else
           ! don't rely on compiler to truncate integer(8) to integer(4) on
           ! overflow, do wrap around explicitly.
-          count4 = mod(((iseed_ca+7)*mytile)*(i1+nx_full*(j1-1))+ 2147483648, 4294967296) - 2147483648
+          count4 = mod(((iseed_ca+7)*mytile)*(i1+nx_full*(j1-1))+ imod, imod*2) - imod
        endif
        ct=1
        do nf=1,nca
