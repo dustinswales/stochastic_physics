@@ -4,7 +4,7 @@
 
 
 FC = mpif90
-FFLAGS_STOCH = -real-size 64 $(FFLAGS) 
+FFLAGS_STOCH = $(FFLAGS)
 FCINCLUDES_STOCH = $(FCINCLUDES) -I../../framework -I../../external/esmf_time_f90 
 RM = rm
 # CORE is a make variable passed via the command line (e.g. "make CORE=atmosphere")
