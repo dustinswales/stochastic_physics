@@ -5,7 +5,7 @@
 
 FC = mpif90
 FFLAGS_STOCH = $(FFLAGS_PROMOTION) $(FFLAGS)
-FCINCLUDES_STOCH = $(FCINCLUDES) -I../../framework -I../../external/esmf_time_f90 
+FCINCLUDES_STOCH = $(FCINCLUDES) -I../physics/ -I../../framework -I../../external/esmf_time_f90 
 RM = rm
 # CORE is a make variable passed via the command line (e.g. "make CORE=atmosphere")
 # in the main call to make to build MPAS.  It specifies which of the various MPAS
