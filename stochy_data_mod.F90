@@ -91,6 +91,7 @@ module stochy_data_mod
    real(kind_dbl_prec),allocatable :: noise_e(:,:),noise_o(:,:)
    include 'function_indlsod'
    include 'function_indlsev'
+   include 'netcdf.inc'
    stochlun=99
    levs=nlevs
 
@@ -543,6 +544,7 @@ module stochy_data_mod
    real(kind=kind_dbl_prec) :: gamma_sum,pi
 
    real(kind_dbl_prec),allocatable :: noise_e(:,:),noise_o(:,:)
+   include 'netcdf.inc'
    stochlun=99
    levs=nlevs
 
@@ -832,6 +834,7 @@ subroutine read_pattern(rpattern,jcapin,lunptn,k,np,varid1,varid2,slice_of_3d,ir
    real(kind_dbl_prec) :: stdevin,varin
    integer nm,nn,iret,ierr,isize,k,ndimspec2
    integer, allocatable :: isave(:)
+   include 'netcdf.inc'
    iret=0
    ndimspec2=2*ndimspec
    allocate(pattern2d(ndimspec2))

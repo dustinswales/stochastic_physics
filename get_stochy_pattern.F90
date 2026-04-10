@@ -444,6 +444,8 @@ subroutine write_stoch_restart_atm(sfile)
     integer :: seed_dim_id,spec_dim_id,zt_dim_id,ztsfc_dim_id,np_dim_id,npsfc_dim_id
     integer :: ztspp_dim_id,npspp_dim_id
 
+    include 'netcdf.inc'
+
     if ( ( .NOT. do_sppt) .AND. (.NOT. do_shum) .AND. (.NOT. do_skeb) .AND. (lndp_type==0 ) .AND. (.NOT. do_spp)) return
     stochlun=99
     if (is_rootpe()) then
@@ -558,7 +560,7 @@ subroutine write_stoch_restart_ocn(sfile)
     integer :: stochlun,k,n,isize,ierr
     integer :: ncid,varid1a,varid1b,varid2a,varid2b,varid3a,varid3b,varid4a,varid4b
     integer :: seed_dim_id,spec_dim_id,np_dim_id
-
+    include 'netcdf.inc'
     if (is_rootpe() ) print*,'in write restart',do_ocnsppt,pert_epbl,do_ocnskeb
     if ( ( .NOT. do_ocnsppt) .AND. (.NOT. pert_epbl) .AND. ( .NOT. do_ocnskeb) ) return
     stochlun=99
@@ -638,7 +640,7 @@ subroutine write_stoch_restart_ocn(sfile)
    real(kind_phys), allocatable  :: pattern2d(:)
    integer nm,nn,arrlen,isize,ierr
    integer,allocatable :: isave(:)
-
+   include 'netcdf.inc'
    arrlen=2*ndimspec
    iret=0
    allocate(pattern2d(arrlen))
