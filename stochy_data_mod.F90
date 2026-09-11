@@ -125,8 +125,6 @@ module stochy_data_mod
        print*, 'The SPPT namelist variable config_sppt(:) is not specified.'
        print*, 'do_sppt is being set; returning.'
      endif
-     iret = -1
-     return
    endif
 #ifdef STOCH_PHYS_DIAG
    if (is_rootpe()) print *,'sppt_lscale = ',sppt_lscale
